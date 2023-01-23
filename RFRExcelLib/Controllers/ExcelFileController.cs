@@ -6,33 +6,39 @@ using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
 
-namespace Controllers.RFRExelLib
+namespace RFRExelLib.Controllers
 {
     public sealed class ExcelFileController
     {
         private Excel.Application _application;
-        private List<Excel.Workbook> _workbooks;
+        private Excel.Workbook _workbooks;
 
-        public List<Excel.Workbook> Workbooks => _workbooks;
+        public string Workbook => _workbooks.FullName;
 
         public ExcelFileController()
         {
             _application = new Excel.Application();
-
+            _workbooks = _application.Workbooks.Add(Missing.Value);
         }
         public ExcelFileController(string path)
         {
             _application = new Excel.Application();
-            _workbooks.Add(_application.Workbooks.Add(path));
+            _workbooks = _application.Workbooks.Add(path);
         }
-
-        public void AddWorkBook(string path)
+        public void AddWorkbook(string path)
         {
-            if (path != null) _workbooks.Add(_application.Workbooks.Add(path));
-            else _workbooks.Add(_application.Workbooks.Add(Missing.Value));                   
+            if (path != null) _workbooks = _application.Workbooks.Add(path);
+            else
+            {
+                var a = _application.Workbooks.Add(Missing.Value);
+                _workbooks = a;
+            }
+        }
+        public void CloseWorkbook()
+        {
+
         }
 
-
-
+        
     }
 }
